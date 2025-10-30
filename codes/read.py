@@ -6,7 +6,10 @@ from sqlalchemy import create_engine
 
 engine = create_engine(f"sqlite:///staging")
 
-file_path =r"C:\Users\aayus\Downloads\Py_project\Team_A\src\asset_performance.csv"
+# Get the directory where the script is located
+current_dir = os.path.dirname(os.path.abspath(__file__))
+# Construct path to the data file relative to the script location
+file_path = os.path.join(current_dir, "..", "src", "asset_performance.csv")
 
 def read_file(file_path):
        if not os.path.exists(file_path):
