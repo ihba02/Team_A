@@ -1,0 +1,37 @@
+[
+    {
+        "Asset": "Compressor",
+        "Category": "Mechanical",
+        "Manufacturer": "ABB",
+        "InstallDate": "2022-08-11",
+        "WarrantyYears": 5
+    },
+    {
+        "Asset": "Pump",
+        "Category": "Mechanical",
+        "Manufacturer": "Siemens",
+        "InstallDate": "2023-06-04",
+        "WarrantyYears": 4
+    },
+    {
+        "Asset": "Conveyor",
+        "Category": "Thermal",
+        "Manufacturer": "GE",
+        "InstallDate": "2021-10-04",
+        "WarrantyYears": 2
+    },
+    {
+        "Asset": "Boiler",
+        "Category": "Thermal",
+        "Manufacturer": "GE",
+        "InstallDate": "2022-04-30",
+        "WarrantyYears": 5
+    },
+    {
+        "Asset": "Generator",
+        "Category": "Electrical",
+        "Manufacturer": "Bosch",
+        "InstallDate": "2022-06-28",
+        "WarrantyYears": 1
+    }
+]
