@@ -9,7 +9,14 @@ engine = create_engine(f"sqlite:///staging")
 file_name = "asset_performance.csv"
 # Get the directory where the script is located
 
+def validate_dataframe(df: pd.DataFrame, required_cols: list, table_name: str):
+    missing_cols = [col for col in required_cols if col not in df.columns]
+    if missing_cols:
+        raise ValueError(f"[{table_name}] Missing required columns: {missing_cols}")
 
+    for col in required_cols:
+        if df[col].isnull().any():
+            raise ValueError(f"[{table_name}] Null values found in required column: {col}")
 
 def log_stg_ingestion(file_name, table_name, row_count, status, message):
     """Logs the ingestion details to the log table."""
@@ -36,6 +43,7 @@ def read_file(file_name):
            if ext == '.csv':
             df = pd.read_csv(file_path)
             table_name = 'staging.Asset_performance'
+            validate_dataframe(df, required_cols=['Date', 'Asset', 'Region','Plant','Temperature','Vibration','HealthScore'], table_name='staging.Asset_performance')
             
            elif ext == '.json':
             with open(file_path, 'r', encoding='utf-8') as f:
@@ -44,10 +52,12 @@ def read_file(file_name):
             if isinstance(data, list):
                 df = pd.DataFrame(data)
                 table_name = 'staging.Asset_Metadata'
+                validate_dataframe(df, required_cols=['Asset', 'Category', 'Manufacturer','InstallDate','WarrantyYears'], table_name='staging.Asset_Metadata')
                 
             elif isinstance(data, dict):
                 df = pd.DataFrame([data])
                 table_name = 'staging.Asset_Metadata'
+                validate_dataframe(df, required_cols=['Asset', 'Category', 'Manufacturer','InstallDate','WarrantyYears'], table_name='staging.Asset_Metadata')
                 
             else:
                 raise ValueError("Unsupported JSON structure")
@@ -60,6 +70,7 @@ def read_file(file_name):
                 rows.append(record)
             df = pd.DataFrame(rows)
             table_name = 'staging.Plant_hierarchy'
+            validate_dataframe(df, required_cols=['Plant', 'Region', 'Manager','EstablishedYear'], table_name='staging.Plant_hierarchy')
             
            else:
             raise ValueError(f"Unsupported file format: {ext}")
