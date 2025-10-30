@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, text
 
 
 def Table_creation():
-    engine = create_engine("sqlite:///warehouse")
+    engine = create_engine("sqlite:///staging")
 
 # Each statement separately
     create_table_1 = """

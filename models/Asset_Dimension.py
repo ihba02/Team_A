@@ -2,8 +2,7 @@
 from sqlalchemy import text,create_engine
 import pandas as pd
 
-con = create_engine("sqlite:///Staging")
-engine = create_engine("sqlite:///warehouse")
+con = create_engine("sqlite:///staging")
 
 
 
@@ -15,21 +14,21 @@ def validate_asset_metadata(con):
     df = pd.read_sql("SELECT * FROM staging.Asset_Metadata", con=con)
 
     # Check if ASSET column exists
-    if 'ASSET' not in df.columns:
-        raise ValueError("Column 'ASSET' not found in staging_asset_metadata")
+    if 'Asset' not in df.columns:
+        raise ValueError("Column 'ASSET' not found in staging.Asset_Metadata")
 
     # Find missing or empty ASSETs
-    invalid_rows = df[df['ASSET'].isnull() | (df['ASSET'].astype(str).str.strip() == '')]
+    invalid_rows = df[df['Asset'].isnull() | (df['Asset'].astype(str).str.strip() == '')]
 
     if not invalid_rows.empty:
-        print("Invalid rows found in staging_asset_metadata:")
+        print("Invalid rows found in staging.Asset_Metadata:")
         print(invalid_rows)
         raise ValueError(f"Found {len(invalid_rows)} record(s) with NULL or blank ASSET values.")
     else:
         print("✅ Validation passed: No NULL or blank ASSET values.")
 
 
-def load_core_dim_asset(con,engine):
+def load_core_dim_asset(con):
     # Step 1: Validate staging data
     validate_asset_metadata(con)
 
@@ -45,11 +44,11 @@ def load_core_dim_asset(con,engine):
         INSTALLDATE = excluded.InstallDate,
         WARRANTYYEERAS = excluded.WarrantyYears;
     """
-    with engine.connect() as conn:
+    with con.connect() as conn:
         conn.execute(text(merge_sql))
         conn.commit()
 
     print("✅ Merge completed successfully into core_dim_asset.")
 
 # Run both steps
-load_core_dim_asset(con,engine)
+load_core_dim_asset(con)

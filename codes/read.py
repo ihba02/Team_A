@@ -39,7 +39,7 @@ def read_file(file_name):
        try:
            if ext == '.csv':
             df = pd.read_csv(file_path)
-            table_name = 'staging.Asset_performance'
+            table_name = 'Asset_performance'
             validate_dataframe(df, required_cols=['Date', 'Asset', 'Region','Plant','Temperature','Vibration','HealthScore'], table_name='staging.Asset_performance')
             
            elif ext == '.json':
@@ -48,12 +48,12 @@ def read_file(file_name):
             # Convert JSON data to DataFrame
             if isinstance(data, list):
                 df = pd.DataFrame(data)
-                table_name = 'staging.Asset_Metadata'
+                table_name = 'Asset_Metadata'
                 validate_dataframe(df, required_cols=['Asset', 'Category', 'Manufacturer','InstallDate','WarrantyYears'], table_name='staging.Asset_Metadata')
                 
             elif isinstance(data, dict):
                 df = pd.DataFrame([data])
-                table_name = 'staging.Asset_Metadata'
+                table_name = 'Asset_Metadata'
                 validate_dataframe(df, required_cols=['Asset', 'Category', 'Manufacturer','InstallDate','WarrantyYears'], table_name='staging.Asset_Metadata')
                 
             else:
@@ -75,7 +75,7 @@ def read_file(file_name):
 
                 rows.append(record)
             df = pd.DataFrame(rows)
-            table_name = 'staging.Plant_hierarchy'
+            table_name = 'Plant_hierarchy'
             validate_dataframe(df, required_cols=['Plant_name', 'Region', 'Manager','EstablishedYear'], table_name='staging.Plant_hierarchy')
             
            else:
