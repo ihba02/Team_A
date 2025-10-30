@@ -4,9 +4,9 @@ import json
 import xml.etree.ElementTree as ET
 from sqlalchemy import create_engine
 from datetime import datetime
-
+from metadata_client import get_file_names
 engine = create_engine(f"sqlite:///staging")
-file_name = "asset_performance.csv"
+file_names = get_file_names()
 # Get the directory where the script is located
 
 def validate_dataframe(df: pd.DataFrame, required_cols: list, table_name: str):
@@ -92,4 +92,5 @@ def read_file(file_name):
        except Exception as e:
         raise RuntimeError(f"Error reading {file_path}: {e}")
 
-read_file(file_name)
+for i in file_names:
+    read_file(i)
