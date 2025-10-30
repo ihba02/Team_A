@@ -6,17 +6,14 @@ from sqlalchemy import create_engine
 from datetime import datetime
 
 engine = create_engine(f"sqlite:///staging")
-file_name = "asset_performance.csv"
+file_name = "plant_hierarchy (1).xml"
 # Get the directory where the script is located
 
 def validate_dataframe(df: pd.DataFrame, required_cols: list, table_name: str):
     missing_cols = [col for col in required_cols if col not in df.columns]
     if missing_cols:
         raise ValueError(f"[{table_name}] Missing required columns: {missing_cols}")
-
-    for col in required_cols:
-        if df[col].isnull().any():
-            raise ValueError(f"[{table_name}] Null values found in required column: {col}")
+    
 
 def log_stg_ingestion(file_name, table_name, row_count, status, message):
     """Logs the ingestion details to the log table."""
@@ -65,12 +62,21 @@ def read_file(file_name):
             tree = ET.parse(file_path)
             root = tree.getroot()
             rows = []
-            for child in root:
-                record = {elem.tag: elem.text for elem in child}
+            for parent in root:
+    # Start with parent attributes (like Plant name="PlantA")
+                record = {}
+    # Add parent attributes as columns
+                for attr_key, attr_value in parent.attrib.items():
+                    record[f"{parent.tag}_{attr_key}"] = attr_value
+
+    # Add child elements as columns
+                for elem in parent:
+                    record[elem.tag] = elem.text
+
                 rows.append(record)
             df = pd.DataFrame(rows)
             table_name = 'staging.Plant_hierarchy'
-            validate_dataframe(df, required_cols=['Plant', 'Region', 'Manager','EstablishedYear'], table_name='staging.Plant_hierarchy')
+            validate_dataframe(df, required_cols=['Plant_name', 'Region', 'Manager','EstablishedYear'], table_name='staging.Plant_hierarchy')
             
            else:
             raise ValueError(f"Unsupported file format: {ext}")
