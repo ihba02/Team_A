@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 from datetime import datetime
 
 engine = create_engine(f"sqlite:///staging")
-file_name = "plant_hierarchy (1).xml"
+file_name = "asset_performance.csv"
 # Get the directory where the script is located
 
 def validate_dataframe(df: pd.DataFrame, required_cols: list, table_name: str):
