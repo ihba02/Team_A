@@ -1,1 +1,9 @@
+
+# Core runtime dependencies (inferred from code imports and venv)
 Flask>=2.0
+requests
+pandas
+SQLAlchemy
+numpy
+
+# Note: transient deps (python-dateutil, pytz, etc.) are pulled in by the packages above.
